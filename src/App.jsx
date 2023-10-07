@@ -1,10 +1,34 @@
-import { CharacterList } from "./components/CharacterList";
+import { useState, useEffect } from "react";
+import { Character } from "./components/Character";
 
-function App() {
+export function App() {
+  const [characters, setCharacters] = useState([]);
+
+  useEffect(() => {
+    async function fetchData() {
+      const data = await fetch(
+        `https://rickandmortyapi.com/api/character?page=`
+      );
+      const { results } = await data.json();
+      setCharacters(results);
+    }
+    fetchData();
+  }, []);
+
   return (
-    <div className="bg-dark text-white">
-      <h1 className="text-center display-1 py-4">Rick y Morty</h1>
-      <CharacterList />
+    <div className="bg-black pr-10">
+      <div className="grid grid-cols-4 gap-4">
+        {characters.map((character) => (
+          <div className="" key={character.id}>
+            <Character
+              key={character.id}
+              name={character.name}
+              origin={character.origin}
+              image={character.image}
+            />
+          </div>
+        ))}
+      </div>
     </div>
   );
 }
